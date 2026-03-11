@@ -15,18 +15,18 @@ var testQueries *Queries
 var testDB *pgxpool.Pool
 
 func TestMain(m *testing.M) {
-	ctx := context.Background()
+	var err error
 
-	pool, err := pgxpool.New(ctx, dbSource)
+	testDB, err = pgxpool.New(context.Background(), dbSource)
 	if err != nil {
 		log.Fatal("Can not create connection pool", err)
 	}
 
-	if err := pool.Ping(ctx); err != nil {
-		log.Fatal("Cannot ping db:", err)
+	if err := testDB.Ping(context.Background()); err != nil {
+		log.Fatal("cannot ping database:", err)
 	}
-	testDB = pool
-	testQueries = New(pool)
+
+	testQueries = New(testDB)
 
 	code := m.Run()
 
