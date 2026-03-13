@@ -9,7 +9,7 @@ INSERT INTO accounts (
 RETURNING *;
 
 -- name: GetAccount :one
-SELECT * FROM accounts
+SELECT * FROM accoun ts
 WHERE id = $1 LIMIT 1;
 
 -- name: ListAccounts :many
