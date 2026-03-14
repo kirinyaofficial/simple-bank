@@ -10,6 +10,18 @@ jobs:
   test: # Indented this to be under 'jobs'
     name: Test
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: secrete
+          POSTGRES_DB: simple_bank
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     
     steps:
       - name: Check out code
@@ -19,6 +31,9 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: 'stable' 
+      
+      - name: Run migrations
+        run: make migrateup
 
       - name: Test
         run: make test
