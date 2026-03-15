@@ -7,16 +7,16 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/kirinyaofficial/simple-bank/api"
 	db "github.com/kirinyaofficial/simple-bank/db/sqlc"
-)
-
-const (
-	dbSource      = "postgresql://root:secrete@localhost:5432/simple_bank?sslmode=disable"
-	serverAddress = "0.0.0.0:8080"
+	"github.com/kirinyaofficial/simple-bank/util"
 )
 
 func main() {
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
 
-	conn, err := pgxpool.New(context.Background(), dbSource)
+	conn, err := pgxpool.New(context.Background(), config.DBSoruce)
 	if err != nil {
 		log.Fatal("Can not create connection pool", err)
 	}
@@ -28,7 +28,7 @@ func main() {
 	store := db.NewStore(conn)
 	server := api.NewSerevr(store)
 
-	err = server.Start(serverAddress)
+	err = server.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatal("cannot start server:", err)
 	}
