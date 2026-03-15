@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
+
 	db "github.com/kirinyaofficial/simple-bank/db/sqlc"
 )
 
