@@ -181,7 +181,7 @@ func TestCreateUserAPI(t *testing.T) {
 			store := mock_db.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
 			// Marshal body data to JSON
@@ -200,7 +200,7 @@ func TestCreateUserAPI(t *testing.T) {
 
 func randomUser(t *testing.T) (user db.User, password string) {
 	password = util.RandomString(6)
-	hashedPassword, err := util.HashedPassword(password)
+	hashedPassword, err := util.HashPassword(password)
 	require.NoError(t, err)
 
 	user = db.User{

@@ -16,7 +16,7 @@ func main() {
 		log.Fatal("cannot load config:", err)
 	}
 
-	conn, err := pgxpool.New(context.Background(), config.DBSoruce)
+	conn, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		log.Fatal("Can not create connection pool", err)
 	}
@@ -26,7 +26,10 @@ func main() {
 	}
 
 	store := db.NewStore(conn)
-	server := api.NewServer(store)
+	server, err := api.NewServer(config, store)
+	if err != nil {
+		log.Fatal("cannot create server:", err)
+	}
 
 	err = server.Start(config.ServerAddress)
 	if err != nil {
