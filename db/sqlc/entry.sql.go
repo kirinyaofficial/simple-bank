@@ -11,12 +11,11 @@ import (
 
 const createEntry = `-- name: CreateEntry :one
 INSERT INTO entries (
-  account_id, 
+  account_id,
   amount
 ) VALUES (
   $1, $2
-)
-RETURNING id, account_id, amount, created_at
+) RETURNING id, account_id, amount, created_at
 `
 
 type CreateEntryParams struct {
@@ -73,7 +72,7 @@ func (q *Queries) ListEntries(ctx context.Context, arg ListEntriesParams) ([]Ent
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Entry
+	items := []Entry{}
 	for rows.Next() {
 		var i Entry
 		if err := rows.Scan(

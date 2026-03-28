@@ -7,29 +7,24 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/kirinyaofficial/simple-bank/util"
 )
-
-const dbSource = "postgresql://root:secrete@localhost:5432/simple_bank?sslmode=disable"
 
 var testQueries *Queries
 var testDB *pgxpool.Pool
 
 func TestMain(m *testing.M) {
-	ctx := context.Background()
-
-	pool, err := pgxpool.New(ctx, dbSource)
+	config, err := util.LoadConfig("../..")
 	if err != nil {
-		log.Fatal("Can not create connection pool", err)
+		log.Fatal("cannot load config:", err)
 	}
 
-	if err := pool.Ping(ctx); err != nil {
-		log.Fatal("Cannot ping db:", err)
+	testDB, err = pgxpool.New(context.Background(), config.DBSource)
+	if err != nil {
+		log.Fatal("cannot connect to db:", err)
 	}
-	testDB = pool
-	testQueries = New(pool)
 
-	code := m.Run()
+	testQueries = New(testDB)
 
-	testDB.Close()
-	os.Exit(code)
+	os.Exit(m.Run())
 }
