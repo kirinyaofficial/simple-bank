@@ -22,7 +22,7 @@ migratedown1:
 	migrate -path db/migration/ -database "$(DB_URL)" -verbose down 1
 
 up:
-	docker compose up 
+	docker compose up --build
 
 down:
 	docker compose down
