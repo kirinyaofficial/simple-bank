@@ -1,4 +1,5 @@
 DB_URL=postgresql://root:secrete@localhost:5432/simple_bank?sslmode=disable
+PROD_DB_URL=postgresql://root:TfSnCf68qnJuUrHDcR7W@simplebank.c1ceuo2aouck.us-east-1.rds.amazonaws.com:5432/simple_bank
 
 postgres:
 	docker run --name postgres17 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secrete -d postgres:17.5-alpine
@@ -11,6 +12,9 @@ dropdb:
 
 migrateup:
 	migrate -path db/migration/ -database "$(DB_URL)" -verbose up
+
+migrateupprod:
+	migrate -path db/migration/ -database "$(PROD_DB_URL)" -verbose up
 
 migrateup1:
 	migrate -path db/migration/ -database "$(DB_URL)" -verbose up 1
@@ -39,4 +43,4 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/kirinyaofficial/simple-bank/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc psql test server mock build up down
+.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc psql test server mock build up down migrateupprod
