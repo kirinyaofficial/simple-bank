@@ -20,7 +20,7 @@ services:
     environment:
       - DB_SOURCE=postgresql://root:secrete@postgres:5432/simple_bank?sslmode=disable
     depends_on:
-      postgres:
+      - postgres:
         condition: service_healthy
     entrypoint: ["/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh"]
     command: ["/app/main"]
